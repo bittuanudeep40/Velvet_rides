@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SheCabs - Drive with Confidence</title>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
-    <script src="script.js"></script>
+    <script src="mapIntegration.js"></script>
+    <!-- Add after other styles -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpjRnJJrN9VG61KGdfoURGpAOoikWohEk&callback=initMap" async defer></script>
+
+    
     <style>
         body {
             font-family: 'Times New Roman', Times, serif;
@@ -136,22 +144,21 @@
         .recording-controls button {
             margin: 0 10px;
         }
-                  /* Style for the pop-up */
-       .popup {
-              display: none;
-              position: fixed;
-              left: 50%;
-              top: 50%;
-              transform: translate(-50%, -50%);
-              background-color: #fff;
-              border-radius: 10px;
-              padding: 20px;
-              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-              z-index: 9999;
+        .popup {
+        display: none;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
             }
         
         .popup h2 {
-              margin-top: 0;
+        margin-top: 0;
             }
         
         .popup input[type="file"], .popup input[type="text"] {
@@ -205,14 +212,129 @@
               0% { filter: brightness(0.5); }
               100% { filter: brightness(1.5); }
             }
-            
-           
-    </style>
+            .button-container {
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    .predict-button {
+      background-color: #007bff;
+      color: white;
+      padding: 15px 30px;
+      margin: 15px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .predict-button:hover {
+    background-color: #0056b3;
+      transform: scale(1.05);
+    }
+    floating-helper-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 9999;
+  }
+
+  .helper-button {
+    background-color: #fff;
+    border: 2px solid #ff5c8d;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .helper-button img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+  }
+
+  .helper-tooltip {
+    position: absolute;
+    right: 70px;
+    background-color: #ff5c8d;
+    color: #fff;
+    font-size: 14px;
+   padding: 8px 12px;
+    border-radius: 16px;
+    opacity: 0;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .helper-button:hover .helper-tooltip {
+    opacity: 1;
+  }
+  .floating-helper-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 9999;
+  }
+
+  .helper-button {
+    background-color: #fff;
+    border: 2px solid #ff5c8d;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .helper-button img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+  }
+
+  .helper-tooltip {
+    position: absolute;
+    right: 70px;
+    background-color: #ff5c8d;
+    color: #fff;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 16px;
+    opacity: 0;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .helper-button:hover .helper-tooltip {
+    opacity: 1;
+  }
+
+    
+  
+
+</style>
 </head>
 <body>
     <!-- Animation Intro -->
     <div id="intro-animation">
-        <img id="intro-logo" src="C:\Users\Srithik\Desktop\velvet rides/final.jpg" alt="SheCabs Logo">
+        <img id="intro-logo" src="final.jpg" alt="SheCabs Logo">
         <h1 class="animated-title">VELVET RIDES</h1>
         <h2 class="animated-subtitle">Drive with Confidence</h2>
     </div>
@@ -221,7 +343,7 @@
     <div id="main-content">
         <header>
             <div class="logo-container">
-                <img src="C:\Users\Srithik\Desktop\velvet rides/final.jpg" alt="Final Logo">
+                <img src="final.jpg" alt="Final Logo">
                 <h1>VELVET RIDES</h1>
                 <h2>DRIVE WITH CONFIDENCE</h2>
             </div>
@@ -234,7 +356,7 @@
     <!-- User Registration Page -->
     <div id="user-registration" class="registration">
         <div class="logo-container">
-            <img src="C:\Users\Srithik\Desktop\velvet rides/final.jpg" alt="Final Logo">
+            <img src="final.jpg" alt="Final Logo">
             <h1>VELVET RIDES</h1>
             <h2>DRIVE WITH CONFIDENCE</h2>
         </div>
@@ -254,7 +376,7 @@
     <!-- User Module -->
     <div id="user-module" class="module" style="display: none;">
         <div class="logo-container">
-            <img src="C:\Users\Srithik\Desktop\velvet rides/final.jpg" alt="Final Logo">
+            <img src="final.jpg" alt="Final Logo">
             <h1>VELVET RIDES</h1>
             <h2>DRIVE WITH CONFIDENCE</h2>
         </div>
@@ -277,6 +399,7 @@
             <p id="distance-user">Distance: 0 km</p>
         </div>
         
+        
         <!-- Voice Recording Feature for User Module -->
         <h2>Voice Commands</h2>
         <div class="recording-controls">
@@ -287,6 +410,16 @@
         <audio id="user-audio" controls style="display: none;"></audio>
 
         <button id="back-to-main-from-user-module">Back</button>
+        <button id="offline-user-btn">Go Offline</button>
+        <div class="floating-helper-btn">
+            <a href="https://velli-ride-whisperer.lovable.app/" target="_blank" rel="noopener noreferrer">
+                <div class="helper-button">
+                    <img src="final.jpg" alt="Help" />
+                    <div class="helper-tooltip">Hi, how can I help you?</div>
+                </div>
+            </a>
+        </div>
+
        
 
         
@@ -297,9 +430,20 @@
     <button id="emergencyBtn">Emergency</button>
 </div>
 
+
+  <div class="button-container">
+    
+    <button class="predict-button" onclick="location.href=' http://127.0.0.1:5000'">Traffic Prediction</button>
+
+
+
+    
+    <button class="predict-button" onclick="location.href='http://127.0.0.1:8000/'">Weather Prediction</button>
+  </div>
+
         
           <!-- Police Car Image (Increased Size) -->
-          <img src="c:\Users\Srithik\Downloads\police.png.png" alt="Police Car" class="police-car" id="policeCar">
+          <img src="police.png.png" alt="Police Car" class="police-car" id="policeCar">
         
         
           <!-- Fixed Fraud Report Popup -->
@@ -312,25 +456,16 @@
     <button id="submitReportBtn">Report Fraud!</button>
     <div class="message" id="message">Our team will take further actions...</div>
     <button id="closePopupBtn">Back</button> <!-- Fixed Back Button -->
+
+
 </div>
+    <h2>Map</h2>
+    <div id="map" style="height: 500px;"></div>
 
-        
-          
 
-        
-        <h2>Map</h2>
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3803.8441099245856!2d78.44947857493894!3d17.56260718335477!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb8ff8652b6823%3A0x981713dbb4b708c3!2sMalla%20Reddy%20University!5e0!3m2!1sen!2sin!4v1729608872700!5m2!1sen!2sin" 
-                width="600" 
-                height="450" 
-                style="border:0;" 
-                allowfullscreen="" 
-                loading="lazy"></iframe>
-                
-                <button id="ride-button" onclick="startRide()">Book Ride</button>
-                
-              
-                
 
+                
+    <button id="ride-button" onclick="startRide()">Book Ride</button>
 
     </div>
     
@@ -338,7 +473,7 @@
     <!-- Driver Registration Page -->
     <div id="driver-registration" class="registration">
         <div class="logo-container">
-            <img src="C:\Users\Srithik\Desktop\velvet rides\final.jpg" alt="Final Logo">
+            <img src="final.jpg" alt="Final Logo">
             <h1>VELVET RIDES</h1>
             <h2>DRIVE WITH CONFIDENCE</h2>
         </div>
@@ -373,12 +508,10 @@
         
     </div>
 
-    <!-- Driver Module -->
-   <!-- Driver Module -->
-<!-- Driver Module -->
+   
 <div id="driver-module" class="module" style="display: none;">
     <div class="logo-container">
-        <img src="C:\Users\Srithik\Desktop\velvet rides/final.jpg" alt="Final Logo">
+        <img src="final.jpg" alt="Final Logo">
         <h1>VELVET RIDES</h1>
         <h2>DRIVE WITH CONFIDENCE</h2>
     </div>
@@ -390,12 +523,13 @@
         <p id="distance-driver">Distance: 0 km</p>
     </div>
     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3803.8441099245856!2d78.44947857493894!3d17.56260718335477!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb8ff8652b6823%3A0x981713dbb4b708c3!2sMalla%20Reddy%20University!5e0!3m2!1sen!2sin!4v1729608872700!5m2!1sen!2sin" 
-            width="600" 
-            height="450" 
-            style="border:0;" 
-            allowfullscreen="" 
-            loading="lazy"></iframe>
-    <button id="accept-ride" onclick="window.location.href = 'you.html';">Veiw Ride Details</button>
+    width="600" 
+    height="450" 
+    style="border:0;" 
+    allowfullscreen="" 
+    loading="lazy"></iframe>
+
+    <button id="accept-ride" onclick="window.location.href = 'you.html';">View Ride Details</button>
   
     
         
@@ -408,17 +542,24 @@
         </div>
         <audio id="driver-audio" controls style="display: none;"></audio>
         <button id="back-to-main-from-driver-module">Back</button>
-         <!-- Fraud Report Popup -->
-        <!-- Fraud Report Popup -->
-        <!-- Buttons Container -->
-<!-- Buttons Container (New Code) -->
+   
 <div class="buttons-container">
     <button id="reportFraudBtnDriver">Report Fraud Driver</button>
     <button id="emergencyBtnDriver">Emergency</button>
 </div>
+<div class="floating-helper-btn">
+  <a href="https://velli-ride-whisperer.lovable.app/" target="_blank" rel="noopener noreferrer">
+    <div class="helper-button">
+      <img src="final.jpg" alt="Help" />
+      <div class="helper-tooltip">Hi, how can I help you?</div>
+    </div>
+  </a>
+</div>
+
+
 
 <!-- Police Car Image -->
-<img src="c:\Users\Srithik\Downloads\police.png.png" alt="Police Car" class="police-car" id="policeCar" style="display: none;">
+<img src="police.png.png" alt="Police Car" class="police-car" id="policeCar" style="display: none;">
 
 <!-- Fixed Fraud Report Popup -->
 <div class="popup" id="fraudPopupDriver">
@@ -431,7 +572,31 @@
     <div class="message" id="messageDriver">Our team will take further actions...</div>
     <button id="closePopupBtnDriver">Back</button> <!-- Fixed Back Button -->
 </div> 
+  <button class="predict-button" onclick="location.href=' http://127.0.0.1:5000'">Traffic Prediction</button>
+
+
+
+    
+    <button class="predict-button" onclick="location.href='http://127.0.0.1:8000/'">Weather Prediction</button>
+  </div>
+
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const offlineUserBtn = document.getElementById("offline-user-btn");
+
+    offlineUserBtn.addEventListener("click", function () {
+        window.location.href = "button1.html"; // Redirects to button1.html
+    });
+});
+<div class="floating-helper-btn">
+  <a href="https://velli-ride-whisperer.lovable.app/" target="_blank" rel="noopener noreferrer">
+    <div class="helper-button">
+      <img src="final.jpg" alt="Help" />
+      <div class="helper-tooltip">Hi, how can I help you?</div>
+    </div>
+  </a>
+</div>
+
 document.addEventListener("DOMContentLoaded", function () {
     console.log("DOM fully loaded and parsed");
 
@@ -534,44 +699,8 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
 </div>
 
-<style>
-/* Add these styles */
-.ride-notification-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.2);
-    z-index: 10000;
-    text-align: center;
-    animation: slideIn 0.5s ease-out;
-}
 
-@keyframes slideIn {
-    from { transform: translate(-50%, -200%); }
-    to { transform: translate(-50%, -50%); }
-}
 
-.notification-buttons button {
-    margin: 10px;
-    padding: 12px 25px;
-    border-radius: 8px;
-    font-weight: bold;
-}
-
-#acceptRide {
-    background: #00cc00;
-    color: white;
-}
-
-#declineRide {
-    background: #ff4444;
-    color: white;
-}
-</style>
 
 <script>
 // Add this in the driver module script
@@ -590,8 +719,8 @@ function showRideNotification(ride) {
     notification.style.display = 'block';
 
     // Sound notification
-    const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2861/2861-preview.mp3');
-    notificationSound.play();
+    //const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2861/2861-preview.mp3'); -->
+    //notificationSound.play();
 
     // Auto-decline after 30 seconds
     setTimeout(() => {
@@ -768,11 +897,33 @@ function rejectRide() {
 
             // User registration logic
             document.getElementById('user-register').addEventListener('click', () => {
-                // Perform registration logic here
-                alert('User registered!');
+    const email = document.getElementById('user-email').value.trim();
+    const phone = document.getElementById('user-phone').value.trim();
+
+    // ✅ Prevent registration if fields are empty
+    if (!email || !phone) {
+        alert("⚠️ Please enter both email and phone number before proceeding.");
+        return;
+    }
+
+    fetch('/register/user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, phone })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        document.getElementById('user-registration').style.display = 'none';
+        document.getElementById('user-module').style.display = 'block';
+    })
+    .catch(error => console.error('Error:', error));
+    alert('User registered!');
                 document.getElementById('user-registration').style.display = 'none';
                 document.getElementById('user-module').style.display = 'block';
-            });
+});
+
+
             function startRide() {
     // Redirect to `car.html`, which will show for 10 seconds before redirecting
     window.location.href = "car.html";
@@ -785,12 +936,36 @@ document.getElementById('ride-button').addEventListener('click', () => {
 
             // Driver registration logic
             document.getElementById('driver-register').addEventListener('click', () => {
-                // Perform registration logic here
-                alert('Driver registered!');
+    const name = document.getElementById('driver-name').value.trim();
+    const email = document.getElementById('driver-email').value.trim();
+    const phone = document.getElementById('driver-phone').value.trim();
+    const pan = document.getElementById('pan').value.trim();
+    const aadhar = document.getElementById('aadhar').value.trim();
+
+    // ✅ Prevent registration if any field is empty
+    if (!name || !email || !phone || !pan || !aadhar) {
+        alert("⚠️ Please enter all details before proceeding.");
+        return;
+    }
+
+    fetch('/register/driver', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, phone, pan, aadhar })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        document.getElementById('driver-registration').style.display = 'none';
+        document.getElementById('driver-module').style.display = 'block';
+    })
+    .catch(error => console.error('Error:', error));
+     // Perform registration logic here
+     alert('Driver registered!');
                 document.getElementById('driver-registration').style.display = 'none';
                 document.getElementById('driver-module').style.display = 'block';
-                
-            });
+});
+
 
             // Back buttons
             document.getElementById('back-to-main-from-user-registration').addEventListener('click', () => {
@@ -852,19 +1027,20 @@ backToMainFromDriverModuleButton.addEventListener('click', () => {
             // Fare calculation
             const fareRate = 10; // Example fare rate per kilometer
 
-            document.getElementById('calculate-fare-user').addEventListener('click', () => {
-                const distanceUser = Math.random() * 10; // Random distance for demo
-                const fareUser = distanceUser * fareRate;
-                document.getElementById('fare-user').innerText = `Estimated Fare: ₹${fareUser.toFixed(2)}`;
-                document.getElementById('distance-user').innerText = `Distance: ${distanceUser.toFixed(2)} km`;
-            });
+document.getElementById('calculate-fare-user').addEventListener('click', () => {
+    const distanceUser = Math.random() * 10; // Random distance for demo
+    const fareUser = distanceUser * fareRate;
+    document.getElementById('fare-user').innerText = `Estimated Fare: ₹${fareUser.toFixed(2)}`;
+    document.getElementById('distance-user').innerText = `Distance: ${distanceUser.toFixed(2)} km`;
+});
 
-            document.getElementById('calculate-fare-driver').addEventListener('click', () => {
-                const distanceDriver = Math.random() * 10; // Random distance for demo
-                const fareDriver = distanceDriver * fareRate;
-                document.getElementById('fare-driver').innerText = `Estimated Fare: ₹${fareDriver.toFixed(2)}`;
-                document.getElementById('distance-driver').innerText = `Distance: ${distanceDriver.toFixed(2)} km`;
-            });
+document.getElementById('calculate-fare-driver').addEventListener('click', () => {
+    const distanceDriver = Math.random() * 10; // Random distance for demo
+    const fareDriver = distanceDriver * fareRate;
+    document.getElementById('fare-driver').innerText = `Estimated Fare: ₹${fareDriver.toFixed(2)}`;
+    document.getElementById('distance-driver').innerText = `Distance: ${distanceDriver.toFixed(2)} km`;
+});
+
             // Get the pickup and drop locations from the user module
 document.getElementById('calculate-fare-user').addEventListener('click', () => {
     const distanceUser = Math.random() * 10; // Random distance for demo
@@ -1200,9 +1376,14 @@ document.getElementById('user-register').addEventListener('click', () => {
         console.error('Error:', error);
     });
 });  
+fetch('/register/user', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ email, phone })
+});
+
+
     </script>
  
     </body>
     </html>
-    
-    

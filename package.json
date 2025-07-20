@@ -1,0 +1,32 @@
+{
+  "name": "shecab",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.3",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongodb": "^6.17.0",
+    "mongoose": "^8.16.0",
+    "node-fetch": "^3.3.1"
+  },
+  "description": "\"# velvetrides\"",
+  "main": "calculate_fare.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snithk/velvetrides.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/snithk/velvetrides/issues"
+  },
+  "homepage": "https://github.com/snithk/velvetrides#readme"
+}
